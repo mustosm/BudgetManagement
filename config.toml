@@ -1,0 +1,11 @@
+#########
+host="localhost"
+port=8080
+
+######### Logging properties #########
+### debug\error ###
+log_level="debug"
+
+######### Database properties #########
+Server="mongodb://must:110986@ds111885.mlab.com:11885/monogodb-db"
+Database="monogodb-db"

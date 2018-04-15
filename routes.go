@@ -44,4 +44,16 @@ var routes = Routes{
 		"/transactions/{transactionId}",
 		GetTransationByID,
 	},
+	Route{
+		"PostTransation",
+		"POST",
+		"/transactions",
+		PostTransation,
+	},
+	Route{
+		"PutTransation",
+		"PUT",
+		"/transactions/{transactionId}",
+		PutTransation,
+	},
 }

@@ -1,6 +1,6 @@
 package main
 
-type jsonErr struct {
+type JsonErr struct {
 	Code int    `json:"code"`
-	Text string `json:"text"`
+	Message string `json:"message"`
 }
