@@ -20,7 +20,6 @@ func NewRouter() *mux.Router {
 	for _, route := range routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
 
 		router.
 			Methods(route.Method).
@@ -33,27 +32,33 @@ func NewRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
-		"GetTransations",
+		"GetTransactions",
 		"GET",
 		"/transactions",
-		GetTransations,
+		GetTransactions,
 	},
 	Route{
-		"GetTransationById",
+		"GetTransactionById",
 		"GET",
 		"/transactions/{transactionId}",
-		GetTransationByID,
+		GetTransactionByID,
 	},
 	Route{
-		"PostTransation",
+		"PostTransaction",
 		"POST",
 		"/transactions",
-		PostTransation,
+		PostTransaction,
 	},
 	Route{
-		"PutTransation",
+		"PutTransaction",
 		"PUT",
 		"/transactions/{transactionId}",
-		PutTransation,
+		PutTransaction,
+	},
+	Route{
+		"HealthCheck",
+		"GET",
+		"/health",
+		HealthCheck,
 	},
 }

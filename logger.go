@@ -6,33 +6,31 @@ import (
 	"time"
 )
 
-// Provide an uniforme log management
-func Logger(inner http.Handler, name string) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// Provide an uniforme request log management
+func RequestLoggerMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		start := time.Now()
 
-		inner.ServeHTTP(w, r)
 		if config.LogLevel == "error" {
 			log.Printf(
-				"%s\t%s\t%s\t%s",
-				r.Method,
-				r.RequestURI,
-				name,
+				"%s\t%#v\t%s\t%s",
+				req.Method,
+				req.RequestURI,
 				time.Since(start),
 			)
 		}
 		if config.LogLevel == "debug" {
 			log.Printf(
-				"%s\t%s\t%s\t%s\t%d\t%s:\n%s\n%s",
-				r.Method,
-				r.RequestURI,
-				name,
+				"%s\t%#v\t%s\t%dB\t%s\tHeaders: %s\tPayload: %s",
+				req.Method,
+				req.RequestURI,
 				time.Since(start),
-				r.ContentLength,
-				r.TransferEncoding,
-				r.Header,
-				r.Body,
+				req.ContentLength,
+				req.TransferEncoding,
+				req.Header,
+				req.Body,
 			)
 		}
+		next.ServeHTTP(w, req)
 	})
 }

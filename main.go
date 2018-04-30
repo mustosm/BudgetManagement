@@ -18,9 +18,8 @@ func init() {
 }
 
 func main() {
-
 	router := NewRouter()
-
+	router.Use(RequestLoggerMiddleware)
 	log.Fatal(http.ListenAndServe(":8080", router))
 
 	return

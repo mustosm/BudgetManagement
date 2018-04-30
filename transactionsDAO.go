@@ -50,7 +50,11 @@ func (m *TransactionsDAO) Delete(transaction Transaction) error {
 
 func (m *TransactionsDAO) Update(transaction Transaction, transactionId string) error {
 	ID := bson.ObjectIdHex(transactionId)
-
 	err := db.C(COLLECTION).UpdateId(ID, &transaction)
 	return err
+}
+
+func (trs *TransactionsDAO) HealthCheck() ([]string, error) {
+	collections, err := db.CollectionNames()
+	return collections, err
 }
