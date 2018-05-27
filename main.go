@@ -12,7 +12,7 @@ var dao = TransactionsDAO{}
 func init() {
 	config.Read()
 
-	dao.Server = config.Server
+	dao.DBServer = config.DBServer
 	dao.Database = config.Database
 	dao.Connect()
 }
@@ -20,7 +20,6 @@ func init() {
 func main() {
 	router := NewRouter()
 	router.Use(RequestLoggerMiddleware)
-	log.Fatal(http.ListenAndServe(":8080", router))
-
+	log.Fatal(http.ListenAndServe(":8082", router))
 	return
 }

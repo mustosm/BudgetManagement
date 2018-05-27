@@ -8,7 +8,7 @@ import (
 )
 
 type TransactionsDAO struct {
-	Server   string
+	DBServer string
 	Database string
 }
 
@@ -19,7 +19,7 @@ const (
 )
 
 func (trs *TransactionsDAO) Connect() {
-	session, err := mgo.Dial(trs.Server)
+	session, err := mgo.Dial(trs.DBServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,9 +32,21 @@ func (trs *TransactionsDAO) FindAll() (Transactions, error) {
 	return transactions, err
 }
 
+func (trs *TransactionsDAO) FindSelect(fields []string) (Transactions, error) {
+	var transactions Transactions
+	err := db.C(COLLECTION).Find(nil).Select(sel(fields)).All(&transactions)
+	return transactions, err
+}
+
 func (m *TransactionsDAO) FindById(id string) (Transaction, error) {
 	var transaction Transaction
 	err := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).One(&transaction)
+	return transaction, err
+}
+
+func (trs *TransactionsDAO) FindSelectById(id string, fields []string) (Transaction, error) {
+	var transaction Transaction
+	err := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).Select(sel(fields)).One(&transaction)
 	return transaction, err
 }
 
@@ -57,4 +69,12 @@ func (m *TransactionsDAO) Update(transaction Transaction, transactionId string) 
 func (trs *TransactionsDAO) HealthCheck() ([]string, error) {
 	collections, err := db.CollectionNames()
 	return collections, err
+}
+
+func sel(q []string) (m bson.M) {
+	m = make(bson.M, len(q))
+	for _, s := range q {
+		m[s] = 1
+	}
+	return
 }

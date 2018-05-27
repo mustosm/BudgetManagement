@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -12,10 +13,15 @@ import (
 
 // GetTransactionByID methode provide the fonctionnality to Get a transaction by Id
 func GetTransactionByID(w http.ResponseWriter, r *http.Request) {
+	var err error
+	var transaction Transaction
 	params := mux.Vars(r)
-	queries := r.URL.Query()
-	println(queries["fields"][1])
-	transaction, err := dao.FindById(params["transactionId"])
+	fields := r.URL.Query().Get("fields")
+	if fields != "" {
+		transaction, err = dao.FindSelectById(params["transactionId"], strings.Split(fields, ","))
+	} else {
+		transaction, err = dao.FindById(params["transactionId"])
+	}
 	if err != nil {
 		respondWithError(w, http.StatusNotFound, err.Error())
 		return
@@ -25,9 +31,16 @@ func GetTransactionByID(w http.ResponseWriter, r *http.Request) {
 
 // GetTransactions methode provide the fonctionnality to Get a list of transactions
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
-	transactions, err := dao.FindAll()
+	var err error
+	var transactions Transactions
+	fields := r.URL.Query().Get("fields")
+	if fields != "" {
+		transactions, err = dao.FindSelect(strings.Split(fields, ","))
+	} else {
+		transactions, err = dao.FindAll()
+	}
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		respondWithError(w, http.StatusNotFound, err.Error())
 		return
 	}
 	respond(w, http.StatusOK, transactions)
@@ -41,13 +54,16 @@ func PostTransaction(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-
-	transaction.TransactionID = bson.NewObjectId()
+	tid := bson.NewObjectId()
+	transaction.TransactionID = &tid
 	if transaction.TransactionDate.IsZero() {
-		transaction.TransactionDate = time.Now().UTC()
+		tdate := time.Now().UTC()
+		transaction.TransactionDate = &tdate
 	}
-	transaction.CreationDate = time.Now().UTC()
-	transaction.UpdateDate = time.Now().UTC()
+	cdate := time.Now().UTC()
+	udate := time.Now().UTC()
+	transaction.CreationDate = &cdate
+	transaction.UpdateDate = &udate
 	transaction.Month = transaction.UpdateDate.Month().String()
 	transaction.Year = strconv.Itoa(transaction.UpdateDate.Year())
 
@@ -68,7 +84,8 @@ func PutTransaction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transaction.UpdateDate = time.Now().UTC()
+	udate := time.Now().UTC()
+	transaction.UpdateDate = &udate
 
 	if err := dao.Update(transaction, params["transactionId"]); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -78,13 +95,15 @@ func PutTransaction(w http.ResponseWriter, r *http.Request) {
 }
 
 // Health check methode provide the service status
-func HealthCheck(w http.ResponseWriter, r *http.Request) {
+func GetHealthCheck(w http.ResponseWriter, r *http.Request) {
 	_, err := dao.HealthCheck()
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respond(w, http.StatusOK, nil)
+	var health HealthCheck
+	health.Message = "I'm alive"
+	respond(w, http.StatusOK, health)
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string) {

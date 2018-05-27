@@ -56,9 +56,9 @@ var routes = Routes{
 		PutTransaction,
 	},
 	Route{
-		"HealthCheck",
+		"GetHealthCheck",
 		"GET",
 		"/health",
-		HealthCheck,
+		GetHealthCheck,
 	},
 }

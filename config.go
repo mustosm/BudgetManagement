@@ -12,8 +12,8 @@ type Config struct {
 	Host     string `toml:"host"`
 	Port     int64  `toml:"port"`
 	LogLevel string `toml:"log_level"`
-	Server   string `toml:"Server"`
-	Database string `toml:"Database"`
+	DBServer string `toml:"dbServer"`
+	Database string `toml:"database"`
 }
 
 // Read and parse the configuration file

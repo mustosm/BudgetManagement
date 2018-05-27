@@ -8,7 +8,7 @@ import (
 
 // Transaction structure
 type Transaction struct {
-	TransactionID   bson.ObjectId `bson:"_id" json:"transactionId,omitempty"`
+	TransactionID   *bson.ObjectId `bson:"_id" json:"transactionId,omitempty"`
 	Description     string        `bson:"description" json:"description,omitempty"`
 	Amount          *Amount       `bson:"amount" json:"amount,omitempty"`
 	Type            string        `bson:"type" json:"type,omitempty"`
@@ -17,9 +17,9 @@ type Transaction struct {
 	AccountID       string        `bson:"accountId" json:"accountId,omitempty"`
 	Month           string        `bson:"month" json:"month,omitempty"`
 	Year            string        `bson:"year" json:"year,omitempty"`
-	TransactionDate time.Time     `bson:"transactionDate" json:"transactionDate,omitempty"`
-	CreationDate    time.Time     `bson:"creationDate" json:"creationDate,omitempty"`
-	UpdateDate      time.Time     `bson:"updateDate" json:"updateDate,omitempty"`
+	TransactionDate *time.Time     `bson:"transactionDate" json:"transactionDate,omitempty"`
+	CreationDate    *time.Time     `bson:"creationDate" json:"creationDate,omitempty"`
+	UpdateDate      *time.Time     `bson:"updateDate" json:"updateDate,omitempty"`
 }
 
 // Transactions structure
