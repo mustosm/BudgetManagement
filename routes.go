@@ -38,10 +38,22 @@ var routes = Routes{
 		GetTransactions,
 	},
 	Route{
+		"HeadTransactions",
+		"HEAD",
+		"/transactions",
+		GetTransactions,
+	},
+	Route{
 		"GetTransactionById",
 		"GET",
 		"/transactions/{transactionId}",
 		GetTransactionByID,
+	},
+	Route{
+		"HeadTransactionsById",
+		"HEAD",
+		"/transactions/{transactionId}",
+		GetTransactions,
 	},
 	Route{
 		"PostTransaction",

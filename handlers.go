@@ -46,6 +46,18 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	respond(w, http.StatusOK, transactions)
 }
 
+// GetTransactionByID methode retrive the Head of Get transactions by Id methode
+func HeadTransactionByID(w http.ResponseWriter, r *http.Request) {
+	
+	respond(w, http.StatusOK, nil)
+}
+
+// HeadTransactions methode retrive the Head of Get transactions methode
+func HeadTransactions(w http.ResponseWriter, r *http.Request) {
+	
+	respond(w, http.StatusOK, nil)
+}
+
 // PostTransaction methode provide the fonctionnality to save a transaction
 func PostTransaction(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()

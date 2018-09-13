@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Title    string
 	Host     string `toml:"host"`
-	Port     int64  `toml:"port"`
+	Port     int  `toml:"port"`
 	LogLevel string `toml:"log_level"`
 	DBServer string `toml:"dbServer"`
 	Database string `toml:"database"`

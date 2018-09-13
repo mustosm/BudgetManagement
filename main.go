@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 	"net/http"
 )
 
@@ -20,6 +21,6 @@ func init() {
 func main() {
 	router := NewRouter()
 	router.Use(RequestLoggerMiddleware)
-	log.Fatal(http.ListenAndServe(":8082", router))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.Port), router))
 	return
 }
